@@ -104,6 +104,16 @@ class sonicapi:
             response = r.json()
             return response
 
+    def getFqdnAddressObjects(self):
+        controller = 'address-objects/fqdn'
+        url = self.baseurl + controller
+        r = requests.get(url, **self.kwargs)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json().pop('address_objects')
+            return response
+
     def getIPv6AddressObjects(self):
         controller = 'address-objects/ipv6'
         url = self.baseurl + controller
@@ -111,7 +121,7 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json()
+            response = r.json().pop('address_groups')
             return response
 
     def getIPv6AddressGroups(self):
@@ -121,7 +131,7 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json()
+            response = r.json().pop('nat_policies')
             return response
 
     def getIPv4AddressObjects(self):
@@ -131,7 +141,7 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json()
+            response = r.json().pop('address_objects')
             return response
 
     def getIPv4AddressGroups(self):
@@ -141,7 +151,7 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json()
+            response = r.json().pop('address_groups')
             return response
 
     def getIPv4NatPolicies(self):
@@ -151,7 +161,7 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json()
+            response = r.json().pop('nat_policies')
             return response
 
     def getIPv4ACL(self):
@@ -161,7 +171,7 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json()
+            response = r.json().pop('access_rules')
             return response
 
     def getIPv4routes(self):
@@ -171,7 +181,7 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json()
+            response = r.json().pop('route_policies')
             return response
 
 
