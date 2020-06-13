@@ -66,7 +66,7 @@ class sonicapi:
                 response = r.json()
                 return response
         elif logout == True:
-            r = requests.delete(url, headers=self.headers, verify=False)
+            r = requests.delete(url, **self.kwargs)
             if r.status_code != 200:
                 return r.status_code
             else:
