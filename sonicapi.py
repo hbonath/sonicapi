@@ -48,8 +48,47 @@ class sonicapi:
             ('Accept-Encoding', 'application/json'),
             ('Charset', 'UTF-8')])
 
-    def auth(self):
+    def auth(self, login=False, logout=False):
         controller = 'auth'
+        url = self.baseurl + controller
+        if login == True:
+            r = requests.post(url, auth=self.authinfo, headers=self.headers, verify=False)
+            if r.status_code != 200:
+                return r.status_code
+            else:
+                response = r.json()
+                return response
+        elif logout == True:
+            r = requests.delete(url, headers=self.headers, verify=False)
+            if r.status_code != 200:
+                return r.status_code
+            else:
+                response = r.json()
+                return response
+        return {}
+
+    def getVersion(self):
+        controller = 'version'
+        url = self.baseurl + controller
+        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
+    def getPendingChanges(self):
+        controller = 'config/pending'
+        url = self.baseurl + controller
+        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
+    def commitPendingChanges(self):
+        controller = 'config/pending'
         url = self.baseurl + controller
         r = requests.post(url, auth=self.authinfo, headers=self.headers, verify=False)
         if r.status_code != 200:
@@ -58,18 +97,18 @@ class sonicapi:
             response = r.json()
             return response
 
-    def logout(self):
-        controller = 'auth'
+    def getIPv6AddressObjects(self):
+        controller = 'address-objects/ipv6'
         url = self.baseurl + controller
-        r = requests.delete(url, headers=self.headers, verify=False)
+        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
         if r.status_code != 200:
             return r.status_code
         else:
             response = r.json()
             return response
 
-    def getIPv6AddressObjects(self):
-        controller = 'address-objects/ipv6'
+    def getIPv6AddressGroups(self):
+        controller = 'address-groups/ipv6'
         url = self.baseurl + controller
         r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
         if r.status_code != 200:
@@ -88,13 +127,54 @@ class sonicapi:
             response = r.json()
             return response
 
+    def getIPv4AddressGroups(self):
+        controller = 'address-groups/ipv4'
+        url = self.baseurl + controller
+        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
+    def getIPv4NatPolicies(self):
+        controller = 'nat-policies/ipv4'
+        url = self.baseurl + controller
+        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
+    def getIPv4ACL(self):
+        controller = 'access-rules/ipv4'
+        url = self.baseurl + controller
+        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
+    def getIPv4routes(self):
+        controller = 'route-policies/ipv4'
+        url = self.baseurl + controller
+        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
+
 def main():
     # This example connects to the API, dumps out a JSON list of Address Objects, and logs out.
     s = sonicapi('192.168.168.168', 4343, 'admin', 'password')
-    print(json.dumps(s.auth()))
+    print(json.dumps(s.auth(login=True)))
     print(json.dumps(s.getIPv4AddressObjects()))
     print(json.dumps(s.getIPv6AddressObjects()))
-    print(json.dumps(s.logout()))
+    print(json.dumps(s.auth(logout=True)))
 
 if __name__ == "__main__":
     main()
