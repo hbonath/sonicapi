@@ -38,21 +38,28 @@ urllib3.disable_warnings()
 
 # This module requires "Enable RFC-2617 HTTP Basic Access authentication" be enabled on the SonicWALL
 
+
 class sonicapi:
     def __init__(self, hostname, port, username, password):
-        self.baseurl = 'https://{0}:{1}/api/sonicos/'.format(hostname, str(port))
+        self.baseurl = 'https://{0}:{1}/api/sonicos/'.format(
+            hostname, str(port))
         self.authinfo = (username, password)
         self.headers = OrderedDict([
             ('Accept', 'application/json'),
             ('Content-Type', 'application/json'),
             ('Accept-Encoding', 'application/json'),
             ('Charset', 'UTF-8')])
+        self.kwargs = {
+            'auth': self.authinfo,
+            'headers': self.headers,
+            'verify': False,
+        }
 
     def auth(self, login=False, logout=False):
         controller = 'auth'
         url = self.baseurl + controller
         if login == True:
-            r = requests.post(url, auth=self.authinfo, headers=self.headers, verify=False)
+            r = requests.post(url, **self.kwargs)
             if r.status_code != 200:
                 return r.status_code
             else:
@@ -70,7 +77,7 @@ class sonicapi:
     def getVersion(self):
         controller = 'version'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -80,7 +87,7 @@ class sonicapi:
     def getPendingChanges(self):
         controller = 'config/pending'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -90,7 +97,7 @@ class sonicapi:
     def commitPendingChanges(self):
         controller = 'config/pending'
         url = self.baseurl + controller
-        r = requests.post(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.post(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -100,7 +107,7 @@ class sonicapi:
     def getIPv6AddressObjects(self):
         controller = 'address-objects/ipv6'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -110,7 +117,7 @@ class sonicapi:
     def getIPv6AddressGroups(self):
         controller = 'address-groups/ipv6'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -120,7 +127,7 @@ class sonicapi:
     def getIPv4AddressObjects(self):
         controller = 'address-objects/ipv4'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -130,7 +137,7 @@ class sonicapi:
     def getIPv4AddressGroups(self):
         controller = 'address-groups/ipv4'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -140,7 +147,7 @@ class sonicapi:
     def getIPv4NatPolicies(self):
         controller = 'nat-policies/ipv4'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -150,7 +157,7 @@ class sonicapi:
     def getIPv4ACL(self):
         controller = 'access-rules/ipv4'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -160,7 +167,7 @@ class sonicapi:
     def getIPv4routes(self):
         controller = 'route-policies/ipv4'
         url = self.baseurl + controller
-        r = requests.get(url, auth=self.authinfo, headers=self.headers, verify=False)
+        r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
@@ -175,6 +182,7 @@ def main():
     print(json.dumps(s.getIPv4AddressObjects()))
     print(json.dumps(s.getIPv6AddressObjects()))
     print(json.dumps(s.auth(logout=True)))
+
 
 if __name__ == "__main__":
     main()
