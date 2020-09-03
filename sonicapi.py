@@ -144,6 +144,30 @@ class sonicapi:
             response = r.json().pop('address_objects')
             return response
 
+    def createIPv4HostObject(self, name, zone, address):
+        controller = 'address-objects/ipv4/'
+        url = self.baseurl + controller
+        data = {
+            'address_objects': [
+                {
+                    'ipv4': {
+                        'name': name,
+                        'zone': zone,
+                        'host': {
+                            'ip': address
+                        }
+                    }
+                }
+            ]
+        }
+        jsondata = json.dumps(data)
+        r = requests.post(url, data=jsondata, **self.kwargs)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json().pop('address_objects')
+            return response
+
     def getIPv4AddressGroups(self):
         controller = 'address-groups/ipv4'
         url = self.baseurl + controller
