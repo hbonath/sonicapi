@@ -74,9 +74,9 @@ class sonicapi:
                 return response
         return {}
 
-    def getVersion(self):
-        controller = 'version'
-        url = self.baseurl + controller
+    def api_get(self, controller):
+        uri = controller
+        url = self.baseurl + uri
         r = requests.get(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
@@ -84,19 +84,9 @@ class sonicapi:
             response = r.json()
             return response
 
-    def getPendingChanges(self):
-        controller = 'config/pending'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
-
-    def commitPendingChanges(self):
-        controller = 'config/pending'
-        url = self.baseurl + controller
+    def api_post(self, controller):
+        uri = controller
+        url = self.baseurl + uri
         r = requests.post(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
@@ -104,45 +94,60 @@ class sonicapi:
             response = r.json()
             return response
 
-    def getFqdnAddressObjects(self):
-        controller = 'address-objects/fqdn'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
+    def api_put(self, controller):
+        uri = controller
+        url = self.baseurl + uri
+        r = requests.put(url, **self.kwargs)
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json().pop('address_objects')
+            response = r.json()
             return response
+
+    def api_delete(self, controller):
+        uri = controller
+        url = self.baseurl + uri
+        r = requests.delete(url, **self.kwargs)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
+    def getVersion(self):
+        controller = 'version'
+        response = self.api_get(controller)
+        return response
+
+    def getPendingChanges(self):
+        controller = 'config/pending'
+        response = self.api_get(controller)
+        return response
+
+    def commitPendingChanges(self):
+        controller = 'config/pending'
+        response = self.api_post(controller)
+        return response
+
+    def getFqdnAddressObjects(self):
+        controller = 'address-objects/fqdn'
+        response = self.api_get(controller).pop('address_objects')
+        return response
 
     def getIPv6AddressObjects(self):
         controller = 'address-objects/ipv6'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json().pop('address_groups')
-            return response
+        response = self.api_get(controller).pop('address_objects')
+        return response
 
     def getIPv6AddressGroups(self):
         controller = 'address-groups/ipv6'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json().pop('nat_policies')
-            return response
+        response = self.api_get(controller).pop('address_groups')
+        return response
 
     def getIPv4AddressObjects(self):
         controller = 'address-objects/ipv4'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json().pop('address_objects')
-            return response
+        response = self.api_get(controller).pop('address_objects')
+        return response
 
     def createIPv4HostObject(self, name, zone, address):
         controller = 'address-objects/ipv4/'
@@ -170,43 +175,23 @@ class sonicapi:
 
     def getIPv4AddressGroups(self):
         controller = 'address-groups/ipv4'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json().pop('address_groups')
-            return response
+        response = self.api_get(controller).pop('address_groups')
+        return response
 
     def getIPv4NatPolicies(self):
         controller = 'nat-policies/ipv4'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json().pop('nat_policies')
-            return response
+        response = self.api_get(controller).pop('nat_policies')
+        return response
 
-    def getIPv4ACL(self):
+    def getIPv4ACLs(self):
         controller = 'access-rules/ipv4'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json().pop('access_rules')
-            return response
+        response = self.api_get(controller).pop('access_rules')
+        return response
 
     def getIPv4routes(self):
         controller = 'route-policies/ipv4'
-        url = self.baseurl + controller
-        r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json().pop('route_policies')
-            return response
+        response = self.api_get(controller).pop('route_policies')
+        return response
 
 
 def main():
