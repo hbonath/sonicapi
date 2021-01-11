@@ -104,6 +104,16 @@ class sonicapi:
             response = r.json()
             return response
 
+    def api_patch(self, controller):
+        uri = controller
+        url = self.baseurl + uri
+        r = requests.patch(url, **self.kwargs)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
+
     def api_delete(self, controller):
         uri = controller
         url = self.baseurl + uri
@@ -170,13 +180,41 @@ class sonicapi:
         if r.status_code != 200:
             return r.status_code
         else:
-            response = r.json().pop('address_objects')
+            response = r.json()
+            return response
+
+    def createIPv4AddressObjects(self, objectlist):
+        controller = 'address-objects/ipv4/'
+        url = self.baseurl + controller
+        data = {
+            'address_objects': objectlist
+        }
+        jsondata = json.dumps(data)
+        r = requests.post(url, data=jsondata, **self.kwargs)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
             return response
 
     def getIPv4AddressGroups(self):
         controller = 'address-groups/ipv4'
         response = self.api_get(controller).pop('address_groups')
         return response
+
+    def createIPv4AddressGroups(self, objectlist):
+        controller = 'address-groups/ipv4/'
+        url = self.baseurl + controller
+        data = {
+            'address_groups': objectlist
+        }
+        jsondata = json.dumps(data)
+        r = requests.post(url, data=jsondata, **self.kwargs)
+        if r.status_code != 200:
+            return r.status_code
+        else:
+            response = r.json()
+            return response
 
     def getIPv4NatPolicies(self):
         controller = 'nat-policies/ipv4'
