@@ -41,7 +41,7 @@ urllib3.disable_warnings()
 
 class sonicapi:
     def __init__(self, hostname, port, username, password):
-        self.baseurl = 'https://{0}:{1}/api/sonicos/'.format(
+        self.baseurl = 'https://{}:{}/api/sonicos/'.format(
             hostname, str(port))
         self.authinfo = (username, password)
         self.headers = OrderedDict([
@@ -58,71 +58,49 @@ class sonicapi:
     def auth(self, login=False, logout=False):
         controller = 'auth'
         url = self.baseurl + controller
+        response = {}
         if login == True:
             r = requests.post(url, **self.kwargs)
-            if r.status_code != 200:
-                return r.status_code
-            else:
-                response = r.json()
-                return response
+            response = r.json()
         elif logout == True:
             r = requests.delete(url, **self.kwargs)
-            if r.status_code != 200:
-                return r.status_code
-            else:
-                response = r.json()
-                return response
-        return {}
+            response = r.json()
+        return response
 
     def api_get(self, controller):
         uri = controller
         url = self.baseurl + uri
         r = requests.get(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
-
+        response = r.json()
+        return response
+        
     def api_post(self, controller):
         uri = controller
         url = self.baseurl + uri
         r = requests.post(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
+        response = r.json()
+        return response
 
     def api_put(self, controller):
         uri = controller
         url = self.baseurl + uri
         r = requests.put(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
+        response = r.json()
+        return response
 
     def api_patch(self, controller):
         uri = controller
         url = self.baseurl + uri
         r = requests.patch(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
+        response = r.json()
+        return response
 
     def api_delete(self, controller):
         uri = controller
         url = self.baseurl + uri
         r = requests.delete(url, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
+        response = r.json()
+        return response
 
     def getVersion(self):
         controller = 'version'
@@ -177,11 +155,8 @@ class sonicapi:
         }
         jsondata = json.dumps(data)
         r = requests.post(url, data=jsondata, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
+        response = r.json()
+        return response
 
     def createIPv4AddressObjects(self, objectlist):
         controller = 'address-objects/ipv4/'
@@ -191,11 +166,8 @@ class sonicapi:
         }
         jsondata = json.dumps(data)
         r = requests.post(url, data=jsondata, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
+        response = r.json()
+        return response
 
     def getIPv4AddressGroups(self):
         controller = 'address-groups/ipv4'
@@ -210,11 +182,19 @@ class sonicapi:
         }
         jsondata = json.dumps(data)
         r = requests.post(url, data=jsondata, **self.kwargs)
-        if r.status_code != 200:
-            return r.status_code
-        else:
-            response = r.json()
-            return response
+        response = r.json()
+        return response
+
+    def putIPv4AddressGroups(self, objectlist):
+        controller = 'address-groups/ipv4/'
+        url = self.baseurl + controller
+        data = {
+            'address_groups': objectlist
+        }
+        jsondata = json.dumps(data)
+        r = requests.put(url, data=jsondata, **self.kwargs)
+        response = r.json()
+        return response
 
     def getIPv4NatPolicies(self):
         controller = 'nat-policies/ipv4'
