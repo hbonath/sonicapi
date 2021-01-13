@@ -211,6 +211,145 @@ class sonicapi:
         response = self.api_get(controller).pop('route_policies')
         return response
 
+#   Consolidated Methods:
+    def AddressObjects(self, objectlist=[], method='get', type='ipv4', name=None, uuid=None):
+        """
+        Interact with Address Objects
+        
+        Keyword arguments:
+        method     -- HTTP method to use
+        type       -- 'ipv4', 'ipv6', 'mac', or 'fqdn'
+        objectlist -- list of address objects you are creating/deleting/modifying.
+        name       -- Optional string containing the name of the object you wish to interact with.
+        uuid       -- Optional string containing the uuid of the object you wish to interact with.
+        """
+        validmethods = ['get', 'post', 'put', 'delete']
+        if method not in validmethods:
+            return {}
+        controller = 'address-objects/{}/'.format(type)
+        if name != None:
+            controller = '{}name/{}'.format(controller, name)
+        if uuid != None:
+            controller = '{}name/{}'.format(controller, uuid)
+        url = self.baseurl + controller
+        data = {
+            'address_objects': objectlist
+        }
+        jsondata = json.dumps(data)
+        if method == 'post':
+            r = requests.post(url, data=jsondata, **self.kwargs)
+        elif method == 'put':
+            r = requests.put(url, data=jsondata, **self.kwargs)
+        elif method == 'delete':
+            r = requests.delete(url, data=jsondata, **self.kwargs)
+        else:
+            r = requests.get(url, **self.kwargs)
+        response = r.json()
+        return response
+
+    def AddressGroups(self, objectlist=[], method='get', ipversion='ipv4', name=None, uuid=None):
+        """
+        Interact with Address Groups
+        
+        Keyword arguments:
+        method     -- HTTP method to use
+        ipversion  -- 'ipv4' or 'ipv6'
+        objectlist -- list of address groups you are creating/deleting/modifying.
+        name       -- Optional string containing the name of the group you wish to interact with.
+        uuid       -- Optional string containing the uuid of the group you wish to interact with.
+        """
+        validmethods = ['get', 'post', 'put', 'delete']
+        if method not in validmethods:
+            return {}
+        controller = 'address-groups/{}/'.format(ipversion)
+        if name != None:
+            controller = '{}name/{}'.format(controller, name)
+        if uuid != None:
+            controller = '{}name/{}'.format(controller, uuid)
+        url = self.baseurl + controller
+        data = {
+            'address_groups': objectlist
+        }
+        jsondata = json.dumps(data)
+        if method == 'post':
+            r = requests.post(url, data=jsondata, **self.kwargs)
+        elif method == 'put':
+            r = requests.put(url, data=jsondata, **self.kwargs)
+        elif method == 'delete':
+            r = requests.delete(url, data=jsondata, **self.kwargs)
+        else:
+            r = requests.get(url, **self.kwargs)
+        response = r.json()
+        return response
+
+    def ServiceObjects(self, objectlist=[], method='get', name=None, uuid=None):
+        """
+        Interact with Service Objects
+        
+        Keyword arguments:
+        method     -- HTTP method to use
+        objectlist -- list of service objects you are creating/deleting/modifying.
+        name       -- Optional string containing the name of the object you wish to interact with.
+        uuid       -- Optional string containing the uuid of the object you wish to interact with.
+        """
+        validmethods = ['get', 'post', 'put', 'delete']
+        if method not in validmethods:
+            return {}
+        controller = 'service-objects/'
+        if name != None:
+            controller = '{}name/{}'.format(controller, name)
+        if uuid != None:
+            controller = '{}name/{}'.format(controller, uuid)
+        url = self.baseurl + controller
+        data = {
+            'service_objects': objectlist
+        }
+        jsondata = json.dumps(data)
+        if method == 'post':
+            r = requests.post(url, data=jsondata, **self.kwargs)
+        elif method == 'put':
+            r = requests.put(url, data=jsondata, **self.kwargs)
+        elif method == 'delete':
+            r = requests.delete(url, data=jsondata, **self.kwargs)
+        else:
+            r = requests.get(url, **self.kwargs)
+        response = r.json()
+        return response
+
+    def ServiceGroups(self, objectlist=[], method='get', name=None, uuid=None):
+        """
+        Interact with Service Groups
+        
+        Keyword arguments:
+        method     -- HTTP method to use
+        objectlist -- list of service groups you are creating/deleting/modifying.
+        name       -- Optional string containing the name of the group you wish to interact with.
+        uuid       -- Optional string containing the uuid of the group you wish to interact with.
+        """
+        validmethods = ['get', 'post', 'put', 'delete']
+        if method not in validmethods:
+            return {}
+        controller = 'service-groups/'
+        if name != None:
+            controller = '{}name/{}'.format(controller, name)
+        if uuid != None:
+            controller = '{}name/{}'.format(controller, uuid)
+        url = self.baseurl + controller
+        data = {
+            'service_groups': objectlist
+        }
+        jsondata = json.dumps(data)
+        if method == 'post':
+            r = requests.post(url, data=jsondata, **self.kwargs)
+        elif method == 'put':
+            r = requests.put(url, data=jsondata, **self.kwargs)
+        elif method == 'delete':
+            r = requests.delete(url, data=jsondata, **self.kwargs)
+        else:
+            r = requests.get(url, **self.kwargs)
+        response = r.json()
+        return response
+
 
 def main():
     # This example connects to the API, dumps out a JSON list of Address Objects, and logs out.
