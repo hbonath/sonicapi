@@ -350,6 +350,48 @@ class sonicapi:
         response = r.json()
         return response
 
+    def Zones(self, objectlist=[], method='get', name=None, uuid=None):
+        """
+        Interact with Zones
+        
+        Keyword arguments:
+        method     -- HTTP method to use
+        objectlist -- list of zones you are creating/deleting/modifying.
+        name       -- Optional string containing the name of the zone you wish to interact with.
+        uuid       -- Optional string containing the uuid of the zone you wish to interact with.
+        """
+        validmethods = ['get', 'post', 'put', 'delete']
+        if method not in validmethods:
+            return {}
+        controller = 'zones/'
+
+        if name != None:
+            controller = '{}name/{}'.format(controller, name)
+        if uuid != None:
+            controller = '{}uuid/{}'.format(controller, uuid)
+        url = self.baseurl + controller
+
+        if name != None or uuid != None:
+            data = {
+                'zone': objectlist
+            }
+        else:
+            data = {
+                'zones': objectlist
+            }
+
+        jsondata = json.dumps(data)
+        if method == 'post':
+            r = requests.post(url, data=jsondata, **self.kwargs)
+        elif method == 'put':
+            r = requests.put(url, data=jsondata, **self.kwargs)
+        elif method == 'delete':
+            r = requests.delete(url, data=jsondata, **self.kwargs)
+        else:
+            r = requests.get(url, **self.kwargs)
+        response = r.json()
+        return response
+
 
 def main():
     # This example connects to the API, dumps out a JSON list of Address Objects, and logs out.
