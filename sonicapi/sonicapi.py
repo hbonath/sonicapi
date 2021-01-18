@@ -392,15 +392,3 @@ class sonicapi:
         response = r.json()
         return response
 
-
-def main():
-    # This example connects to the API, dumps out a JSON list of Address Objects, and logs out.
-    s = sonicapi('192.168.168.168', 4343, 'admin', 'password')
-    print(json.dumps(s.auth(login=True)))
-    print(json.dumps(s.getIPv4AddressObjects()))
-    print(json.dumps(s.getIPv6AddressObjects()))
-    print(json.dumps(s.auth(logout=True)))
-
-
-if __name__ == "__main__":
-    main()

@@ -1,23 +1,3 @@
-# sonicapi
-### Python3 Module to interact with the SonicWall® SonicOS API
-
-Contains Basic functionality:
-
-* Address Objects
-* Address Groups
-* Service Objects
-* Service Groups
-* Zones
-
-### Installation:
-
-```
-pip3 install sonicapi
-```
-
-### Usage:
-
-```
 import sonicapi
 import json
 
@@ -32,4 +12,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
