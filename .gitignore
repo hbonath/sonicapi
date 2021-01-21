@@ -5,3 +5,4 @@ test.py
 build/
 dist/
 sonicapi.egg-info/
+.bumpversion.cfg
