@@ -1,16 +1,18 @@
 # sonicapi
 ## Python3 Module to interact with the SonicWall® SonicOS API  
 
-> Note: This module requires "[Enable RFC-2617 HTTP Basic Access authentication](https://www.sonicwall.com/support/knowledge-base/introduction-to-sonicos-api/)" be enabled on the SonicWALL Appliance  
 
-
-This Module Contains Only Basic functionality:
-
-* Address Objects
-* Address Groups
-* Service Objects
-* Service Groups
-* Zones
+> This Module currently only contains basic functionality:
+>
+>* Address Objects
+>* Address Groups
+>* Service Objects
+>* Service Groups
+>* Zones
+>* Access Rules
+>* NAT Policies
+>* Route Policies
+>* Restart
 
 ### Installation:
 
