@@ -211,6 +211,24 @@ class sonicapi:
             response = r.json()
         return response
 
+    def Preempt(self):
+        """
+        ** Gen7 Only
+        Preempt the other user, set self to config mode.
+        """
+        controller = 'config-mode'
+        response = self._api_post(controller)
+        return response
+
+    def NonConfig(self):
+        """
+        ** Gen7 Only
+        Release config mode, set self to non-config mode.
+        """
+        controller = 'non-config-mode'
+        response = self._api_post(controller)
+        return response
+
     def Version(self):
         """
         Outputs version information
@@ -475,6 +493,11 @@ class sonicapi:
         objectlist -- list of Access Rules you are creating/deleting/modifying.
         uuid       -- Optional string containing the uuid of the Access Rule you wish to interact with.
         """
+        try:
+            myversion = list(self.Version()['firmware_version'].split()[-1])[0]
+        except:
+            myversion = '6'
+
         response = self.response
         validmethods = ['get', 'post', 'put', 'delete']
         if method not in validmethods:
@@ -483,7 +506,10 @@ class sonicapi:
             response['status']['info'][0]['code'] = 'E_INVALID'
             response['status']['info'][0]['message'] = 'Invalid Method.'
             return response
-        controller = 'access-rules/'
+        if myversion == '6':
+            controller = 'access-rules/'
+        elif myversion == '7':
+            controller = 'security-policies/'
 
         if ipversion == 'ipv6':
             controller = '{}ipv6/'.format(controller)
@@ -493,9 +519,14 @@ class sonicapi:
         if uuid != None:
             controller = '{}uuid/{}'.format(controller, uuid)
 
-        data = {
-            'access_rules': objectlist
-        }
+        if myversion == '6':
+            data = {
+                'access_rules': objectlist
+            }
+        elif myversion == '7':
+            data = {
+                'security_policies': objectlist
+            }
 
         if method == 'post':
             response = self._api_post(controller, data)
