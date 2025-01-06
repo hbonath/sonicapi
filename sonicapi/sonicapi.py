@@ -65,6 +65,7 @@ class sonicapi:
     AccessRules
     RoutePolicies
     Restart
+    VpnPolicy
     """
     def __init__(self, hostname, port, username, password):
         self.baseurl = 'https://{}:{}/api/sonicos/'.format(

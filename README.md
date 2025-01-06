@@ -13,6 +13,7 @@
 >* NAT Policies
 >* Route Policies
 >* Restart
+>* VPN Policies
 
 ### Installation:
 
