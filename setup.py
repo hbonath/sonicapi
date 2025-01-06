@@ -15,7 +15,7 @@ URL = 'https://github.com/hbonath/sonicapi'
 EMAIL = 'henry@thebonaths.com'
 AUTHOR = 'Henry Bonath'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.2.1'
+VERSION = '0.2.5'
 
 REQUIRED = [
     'requests>=2.25.1',
