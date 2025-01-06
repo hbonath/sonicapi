@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 #
-# Copyright (c) 2021, Henry Bonath (henry@thebonaths.com)
+# Copyright (c) 2021-2025, Henry Bonath (henry@thebonaths.com)
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,11 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import requests
 import json
-import urllib3
 from collections import OrderedDict
+from paramiko import PasswordRequiredException
+import requests
+import urllib3
 from requests.auth import HTTPDigestAuth
 urllib3.disable_warnings()
 
@@ -96,7 +97,7 @@ class sonicapi:
         """
         uri = controller
         url = self.baseurl + uri
-        if data != None:
+        if data is not None:
             try:
                 jsondata = json.dumps(data)
             except:
@@ -123,7 +124,7 @@ class sonicapi:
         """
         uri = controller
         url = self.baseurl + uri
-        if data != None:
+        if data is not None:
             try:
                 jsondata = json.dumps(data)
             except:
@@ -140,7 +141,7 @@ class sonicapi:
         """
         uri = controller
         url = self.baseurl + uri
-        if data != None:
+        if data is not None:
             try:
                 jsondata = json.dumps(data)
             except:
@@ -157,7 +158,7 @@ class sonicapi:
         """
         uri = controller
         url = self.baseurl + uri
-        if data != None:
+        if data is not None:
             try:
                 jsondata = json.dumps(data)
             except:
@@ -181,7 +182,7 @@ class sonicapi:
     def auth(self, authmethod='Digest', login=False, logout=False):
         """
         Authenticate to the SonicWALL Appliance
-        
+
         Keyword arguments:
         ------------------
         authmethod : str
@@ -195,7 +196,7 @@ class sonicapi:
         controller = 'auth'
         url = self.baseurl + controller
         response = self.response
-        if authmethod == 'Digest' and login == True:
+        if authmethod == 'Digest' and login:
             self.kwargs['auth'] = HTTPDigestAuth(self.authinfo[0], self.authinfo[1])
             r = requests.head(url, **self.kwargs)
             if r.status_code == 200:
@@ -203,10 +204,10 @@ class sonicapi:
                 response['status']['info'][0]['level'] = 'info'
                 response['status']['info'][0]['code'] = 'E_OK'
                 response['status']['info'][0]['message'] = 'Success.'
-        elif authmethod == 'Basic' and login == True:
+        elif authmethod == 'Basic' and login:
             r = requests.post(url, **self.kwargs)
             response = r.json()
-        elif logout == True:
+        elif logout:
             r = requests.delete(url, **self.kwargs)
             response = r.json()
         return response
@@ -237,6 +238,14 @@ class sonicapi:
         response = self._api_get(controller)
         return response
 
+    def getConfig(self):
+        """
+        Returns any pending changes
+        """
+        controller = 'config/current'
+        response = self._api_get(controller)
+        return response
+
     def getPendingChanges(self):
         """
         Returns any pending changes
@@ -256,7 +265,7 @@ class sonicapi:
     def AddressObjects(self, objectlist=[], method='get', type='ipv4', name=None, uuid=None):
         """
         Interact with Address Objects
-        
+
         Keyword arguments:
         method     -- HTTP method to use ('get', 'post', 'put', 'delete')
         type       -- 'ipv4', 'ipv6', 'mac', or 'fqdn'
@@ -273,9 +282,9 @@ class sonicapi:
             response['status']['info'][0]['message'] = 'Invalid Method.'
             return response
         controller = 'address-objects/{}/'.format(type)
-        if name != None:
+        if name is not None:
             controller = '{}name/{}'.format(controller, name)
-        if uuid != None:
+        if uuid is not None:
             controller = '{}name/{}'.format(controller, uuid)
         data = {
             'address_objects': objectlist
@@ -293,7 +302,7 @@ class sonicapi:
     def AddressGroups(self, objectlist=[], method='get', ipversion='ipv4', name=None, uuid=None):
         """
         Interact with Address Groups
-        
+
         Keyword arguments:
         method     -- HTTP method to use ('get', 'post', 'put', 'delete')
         ipversion  -- 'ipv4' or 'ipv6'
@@ -310,9 +319,9 @@ class sonicapi:
             response['status']['info'][0]['message'] = 'Invalid Method.'
             return response
         controller = 'address-groups/{}/'.format(ipversion)
-        if name != None:
+        if name is not None:
             controller = '{}name/{}'.format(controller, name)
-        if uuid != None:
+        if uuid is not None:
             controller = '{}name/{}'.format(controller, uuid)
         data = {
             'address_groups': objectlist
@@ -330,7 +339,7 @@ class sonicapi:
     def ServiceObjects(self, objectlist=[], method='get', name=None, uuid=None):
         """
         Interact with Service Objects
-        
+
         Keyword arguments:
         method     -- HTTP method to use ('get', 'post', 'put', 'delete')
         objectlist -- list of service objects you are creating/deleting/modifying.
@@ -346,9 +355,9 @@ class sonicapi:
             response['status']['info'][0]['message'] = 'Invalid Method.'
             return response
         controller = 'service-objects/'
-        if name != None:
+        if name is not None:
             controller = '{}name/{}'.format(controller, name)
-        if uuid != None:
+        if uuid is not None:
             controller = '{}name/{}'.format(controller, uuid)
         data = {
             'service_objects': objectlist
@@ -366,7 +375,7 @@ class sonicapi:
     def ServiceGroups(self, objectlist=[], method='get', name=None, uuid=None):
         """
         Interact with Service Groups
-        
+
         Keyword arguments:
         method     -- HTTP method to use ('get', 'post', 'put', 'delete')
         objectlist -- list of service groups you are creating/deleting/modifying.
@@ -382,9 +391,9 @@ class sonicapi:
             response['status']['info'][0]['message'] = 'Invalid Method.'
             return response
         controller = 'service-groups/'
-        if name != None:
+        if name is not None:
             controller = '{}name/{}'.format(controller, name)
-        if uuid != None:
+        if uuid is not None:
             controller = '{}name/{}'.format(controller, uuid)
         data = {
             'service_groups': objectlist
@@ -402,7 +411,7 @@ class sonicapi:
     def Zones(self, objectlist=[], method='get', name=None, uuid=None):
         """
         Interact with Zones
-        
+
         Keyword arguments:
         method     -- HTTP method to use ('get', 'post', 'put', 'delete')
         objectlist -- list of zones you are creating/deleting/modifying.
@@ -419,12 +428,12 @@ class sonicapi:
             return response
         controller = 'zones/'
 
-        if name != None:
+        if name is not None:
             controller = '{}name/{}'.format(controller, name)
-        if uuid != None:
+        if uuid is not None:
             controller = '{}uuid/{}'.format(controller, uuid)
 
-        if name != None or uuid != None:
+        if name is not None or uuid is not None:
             data = {
                 'zone': objectlist
             }
@@ -446,7 +455,7 @@ class sonicapi:
     def NatPolicies(self, objectlist=[], method='get', ipversion='ipv4', uuid=None):
         """
         Interact with NAT Policies
-        
+
         Keyword arguments:
         method     -- HTTP method to use ('get', 'post', 'put', 'delete')
         objectlist -- list of NAT Policies you are creating/deleting/modifying.
@@ -467,7 +476,7 @@ class sonicapi:
         else:
             controller = '{}ipv4/'.format(controller)
 
-        if uuid != None:
+        if uuid is not None:
             controller = '{}uuid/{}'.format(controller, uuid)
 
         data = {
@@ -487,7 +496,7 @@ class sonicapi:
     def AccessRules(self, objectlist=[], method='get', ipversion='ipv4', uuid=None):
         """
         Interact with Access Rules
-        
+
         Keyword arguments:
         method     -- HTTP method to use ('get', 'post', 'put', 'delete')
         objectlist -- list of Access Rules you are creating/deleting/modifying.
@@ -516,7 +525,7 @@ class sonicapi:
         else:
             controller = '{}ipv4/'.format(controller)
 
-        if uuid != None:
+        if uuid is not None:
             controller = '{}uuid/{}'.format(controller, uuid)
 
         if myversion == '6':
@@ -541,7 +550,7 @@ class sonicapi:
     def RoutePolicies(self, objectlist=[], method='get', ipversion='ipv4', uuid=None):
         """
         Interact with Route Policies
-        
+
         Keyword arguments:
         objectlist -- list of Route Policies you are creating/deleting/modifying.
         method     -- HTTP method to use ('get', 'post', 'put', 'delete') Defaults to 'get'
@@ -563,7 +572,7 @@ class sonicapi:
         else:
             controller = '{}ipv4/'.format(controller)
 
-        if uuid != None:
+        if uuid is not None:
             controller = '{}uuid/{}'.format(controller, uuid)
 
         data = {
@@ -584,7 +593,7 @@ class sonicapi:
         """
         Reboot the SonicWALL Appliance.
         (Defaults to restart the appliance immediately)
-        
+
         Keyword arguments:
         at      -- Optional str: Timestamp in the form: 'YYYY:MM:DD:HH:MM:SS'
         minutes -- Optional int: Number of minutes in the future
@@ -592,15 +601,41 @@ class sonicapi:
         days    -- Optional int: Number of days in the future
         """
         controller = 'restart/'
-        if at != None and minutes == None and hours == None and days == None:
+        if at is not None and minutes is None and hours is None and days is None:
             pass
-        elif minutes != None and at == None and hours == None and days == None:
+        elif minutes is not None and at is None and hours is None and days is None:
             controller = '{}in/{}/minutes'.format(controller, minutes)
-        elif hours != None and at == None and minutes == None and days == None:
+        elif hours is not None and at is None and minutes is None and days is None:
             controller = '{}in/{}/hours'.format(controller, hours)
-        elif days != None and at == None and minutes == None and hours == None:
+        elif days is not None and at is None and minutes is None and hours is None:
             controller = '{}in/{}/days'.format(controller, days)
 
         response = self._api_post(controller)
         return response
 
+    def VpnPolicy(self, method='get', ipversion='ipv4', vpntype='site-to-site', vpnname=None, data=None):
+        """
+        Interact with VPN Policies.
+
+        Keyword arguments:
+        method     -- HTTP method to use ('get', 'post', 'put', 'patch', 'delete') Defaults to 'get'
+        ipversion  -- ipv4 or ipv6 - Defaults to 'ipv4'
+        vpntype    -- Type of VPN ('site-to-site') Defaults to 'site-to-site'
+        vpnname    -- Name of VPN (optional)
+        data       -- Payload (optional)
+        """
+        controller = f"vpn/policies/{ipversion}/{vpntype}"
+        if vpnname:
+            controller = f"{controller}/name/{vpnname}"
+            if method == 'delete':
+                response = self._api_delete(controller)
+
+        if method == 'post':
+            response = self._api_post(controller, data)
+        elif method == 'put':
+            response = self._api_put(controller, data)
+        elif method == 'patch':
+            response = self._api_patch(controller, data)
+        else:
+            response = self._api_get(controller)
+        return response
